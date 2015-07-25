@@ -37,8 +37,7 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             // Intent starts new activity
-            Intent showSettings = new Intent(this, SettingsActivity.class);
-            startActivity(showSettings);
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
