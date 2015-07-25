@@ -31,7 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -93,13 +92,14 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mForecastAdapter = new ArrayAdapter<>(
+                getActivity(),
+                R.layout.list_item_forecast,    // name of layout id
+                R.id.list_item_forecast_textview,   // id of textView with forecast in it
+                new ArrayList<String>());
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        List<String> weekForecast = new ArrayList<>();
-
-        mForecastAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.list_item_forecast, R.id.list_item_forecast_textview,
-                weekForecast);
 
         // Find reference to ListView
         final ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
