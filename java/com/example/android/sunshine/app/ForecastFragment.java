@@ -78,19 +78,20 @@ public class ForecastFragment extends Fragment {
     private void updateWeather() {
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         /**
-         * SharedPreferences kann von überall auf Prefs zugreifen
-         * Pref Activation erfordert jetzt noch Refresh Button
-         *
-         * .getString scheint bei sharedPred standard zu sein, um einen String zu holen
-         * danach muss man in den Klammern den Key, Value oder beide ansprechen,
-         * um einen von beiden zu bekommen.
+         * SharedPreferences can access Preferences everywhere
+         * Notice 2x getString(getString(key), getString(value))
          */
         SharedPreferences sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
+        // Location Setting
         String locationPref = sharedPref.getString(
                 getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
-        weatherTask.execute(locationPref);
+        // Unit Settings, Default is Metric
+        String metricPref = sharedPref.getString(
+                getString(R.string.pref_units_key),
+                getString(R.string.pref_units_default));
+        weatherTask.execute(locationPref, metricPref);
     }
 
     @Override
@@ -140,7 +141,6 @@ public class ForecastFragment extends Fragment {
 
             // input dynamic data
             String mode = "json";
-            String units = "metric";
             int numDays = 7;
 
             try {
@@ -157,11 +157,17 @@ public class ForecastFragment extends Fragment {
                 final String UNITS_PARAM = "units";
                 final String NUM_DAYS_PARAM = "cnt";
 
+                /**
+                 * If units changed
+                 * params[1] = newValue
+                 */
+                Log.v(LOG_TAG, params[1]);
+
                 // build Uri
                 Uri builtUri = Uri.parse(FORECAST_DEFAULT_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, mode)
-                        .appendQueryParameter(UNITS_PARAM, units)
+                        .appendQueryParameter(UNITS_PARAM, params[1])
                         .appendQueryParameter(NUM_DAYS_PARAM, Integer.toString(numDays))
                         .build();
 

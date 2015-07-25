@@ -4,9 +4,16 @@
     android:layout_height="match_parent">
 
     <EditTextPreference
-        android:title="Location"
-        android:key="location"
-        android:defaultValue="Frankfurt, ger"
+        android:title="@string/pref_location_label"
+        android:key="@string/pref_location_key"
+        android:defaultValue="@string/pref_location_default"
         android:inputType="text"
         android:singleLine="true" />
+
+    <ListPreference
+        android:title="@string/pref_units_label"
+        android:key="@string/pref_units_key"
+        android:defaultValue="@string/pref_units_default"
+        android:entries="@array/pref_units"
+        android:entryValues="@array/pref_units_alias"/>
 </PreferenceScreen>
