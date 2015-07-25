@@ -1,9 +1,11 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -37,6 +39,7 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment {
 
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
     ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
@@ -64,8 +67,20 @@ public class ForecastFragment extends Fragment {
         if (id == R.id.action_refresh) {
 
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            // city input
-            weatherTask.execute("Frankfurt, ger");
+            /**
+             * SharedPreferences kann von überall auf Prefs zugreifen
+             * Pref Activation erfordert jetzt noch Refresh Button
+             *
+             * .getString scheint bei sharedPred standard zu sein, um einen String zu holen
+             * danach muss man in den Klammern den Key, Value oder beide ansprechen,
+             * um einen von beiden zu bekommen.
+             */
+            SharedPreferences sharedPref = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            String locationPref = sharedPref.getString(
+                    getString(R.string.pref_location_key),
+                    getString(R.string.pref_location_default));
+            weatherTask.execute(locationPref);
             return true;
         }
 
@@ -156,6 +171,9 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter(UNITS_PARAM, units)
                         .appendQueryParameter(NUM_DAYS_PARAM, Integer.toString(numDays))
                         .build();
+
+                // test pref acceptance
+                Log.v(LOG_TAG, params[0]);
 
                 // build URL and Log it for testing
                 URL url = new URL(builtUri.toString());
