@@ -87,11 +87,7 @@ public class ForecastFragment extends Fragment {
         String locationPref = sharedPref.getString(
                 getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
-        // Unit Settings, Default is Metric
-        String metricPref = sharedPref.getString(
-                getString(R.string.pref_units_key),
-                getString(R.string.pref_units_default));
-        weatherTask.execute(locationPref, metricPref);
+        weatherTask.execute(locationPref);
     }
 
     @Override
@@ -141,6 +137,7 @@ public class ForecastFragment extends Fragment {
 
             // input dynamic data
             String mode = "json";
+            String units = "metric";
             int numDays = 7;
 
             try {
@@ -157,17 +154,11 @@ public class ForecastFragment extends Fragment {
                 final String UNITS_PARAM = "units";
                 final String NUM_DAYS_PARAM = "cnt";
 
-                /**
-                 * If units changed
-                 * params[1] = newValue
-                 */
-                Log.v(LOG_TAG, params[1]);
-
                 // build Uri
                 Uri builtUri = Uri.parse(FORECAST_DEFAULT_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, mode)
-                        .appendQueryParameter(UNITS_PARAM, params[1])
+                        .appendQueryParameter(UNITS_PARAM, units)
                         .appendQueryParameter(NUM_DAYS_PARAM, Integer.toString(numDays))
                         .build();
 
@@ -245,7 +236,15 @@ public class ForecastFragment extends Fragment {
         /**
          * Prepare the weather high/lows for presentation.
          */
-        private String formatHighLows(double high, double low) {
+        private String formatHighLows(double high, double low, String unitType) {
+            // convert Celsius to Fahrenheit, Metric to Imperial
+            if (unitType.equals(getString(R.string.pref_units_imperial))) {
+                high = high * 1.8 + 32;
+                low = low * 1.8 + 32;
+            }
+            else if (!unitType.equals(getString(R.string.pref_units_metric))) {
+                Log.d(LOG_TAG, "Unit type not found: " + unitType);
+            }
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
@@ -293,6 +292,16 @@ public class ForecastFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
+
+            // Temperature Unit Preference
+            SharedPreferences sharedPref =
+                    PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            // Default is Metric
+            String unitType = sharedPref.getString(
+                    getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_metric));
+
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -320,7 +329,7 @@ public class ForecastFragment extends Fragment {
                 double high = descriptionObject.getDouble(OWM_MAX);
                 double low = descriptionObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
+                highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
