@@ -37,7 +37,7 @@ import java.util.ArrayList;
  */
 public class ForecastFragment extends Fragment {
 
-    ArrayAdapter<String> mForecastAdapter;
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -51,6 +51,7 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecasefragment, menu);
+        inflater.inflate(R.menu.map, menu);
     }
 
     @Override
