@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.sunshine.app.DetailActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/menu_item_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_share"
+        android:title="@string/action_share"
+        app:showAsAction="ifRoom"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
 </menu>

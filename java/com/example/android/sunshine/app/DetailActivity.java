@@ -22,15 +22,19 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
 
+    private static ShareActionProvider mShareActionProvider;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
@@ -38,14 +42,6 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new DetailFragment())
                     .commit();
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.detail, menu);
-        return true;
     }
 
     @Override
@@ -56,13 +52,27 @@ public class DetailActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_item_settings) {
             // Intent starts new activity
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-
+        if (id == R.id.menu_item_share) {
+            doShare();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doShare() {
+
+        Intent share = new Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, R.id.list_item_forecast_textview);
+
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(share);
+        }
     }
 
     /**
@@ -85,6 +95,17 @@ public class DetailActivity extends ActionBarActivity {
                         .setText(forecastStr);
             }
             return rootView;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            // im Fragment immer sagen, dass es ein Menu hat
+            setHasOptionsMenu(true);
+            inflater.inflate(R.menu.detail, menu);
+            MenuItem shareItem = menu.findItem(R.id.menu_item_share);
+
+            // Facebook, Twitter, ...? Which one it is, you will find out here
+            mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
         }
     }
 }

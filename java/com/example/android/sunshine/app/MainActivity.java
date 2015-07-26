@@ -41,12 +41,12 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_item_settings) {
             // Intent starts new activity
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-        if (id == R.id.action_map) {
+        if (id == R.id.menu_item_map) {
             // Intent starts new activity
             openPreferredLocationInMap();
             return true;
