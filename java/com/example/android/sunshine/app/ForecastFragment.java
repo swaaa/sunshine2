@@ -65,8 +65,15 @@ public class ForecastFragment extends Fragment {
             updateWeather();
             return true;
         }
-
+        if (id == R.id.action_map) {
+            showMap();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMap() {
+
     }
 
     @Override
