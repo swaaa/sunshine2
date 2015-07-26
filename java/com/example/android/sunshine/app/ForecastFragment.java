@@ -73,7 +73,27 @@ public class ForecastFragment extends Fragment {
     }
 
     private void showMap() {
+        /**
+         * SharedPreferences can access Preferences everywhere
+         */
+        SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        // Location to search for in Map App
+        String location = sharedPref.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
 
+        /**
+         * geo:0,0?q= has to be in front of the address,
+         * so that Map apps know that it is geo data
+         */
+        Uri mapUri = Uri.parse("geo:0,0?q=" + Uri.encode(location));
+        Intent map = new Intent(Intent.ACTION_VIEW);
+        map.setData(mapUri);
+        // getActivity() coz of Fragment class
+        if (map.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(map);
+        }
     }
 
     @Override
