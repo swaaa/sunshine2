@@ -80,13 +80,13 @@ public class ForecastFragment extends Fragment {
          * SharedPreferences can access Preferences everywhere
          * Notice 2x getString(getString(key), getString(value))
          */
-        SharedPreferences sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(getActivity());
+        SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Location Setting
-        String locationPref = sharedPref.getString(
+        String location = sharedPref.getString(
                 getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
-        weatherTask.execute(locationPref);
+        weatherTask.execute(location);
     }
 
     @Override
