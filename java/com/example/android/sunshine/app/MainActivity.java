@@ -75,7 +75,6 @@ public class MainActivity extends ActionBarActivity {
 
         Intent map = new Intent(Intent.ACTION_VIEW);
         map.setData(geoLocation);
-        // getActivity() coz of Fragment class
         if (map.resolveActivity(getPackageManager()) != null) {
             startActivity(map);
         } else {
